@@ -11,7 +11,7 @@ export default function EditTask() {
     const taskId = router.query.id;
 
     useEffect(function(){
-      axios.get('http://localhost:8000/api/get-item/'+taskId)
+      axios.get('http://localhost:8006/api/get-item/'+taskId)
         .then(res => {
             // console.log(res.data.data);
             setTask(JSON.parse(res.data.data));
@@ -21,12 +21,17 @@ export default function EditTask() {
         });
     }, []);
 
+    
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+
     const updateItem = (e) => {
       e.preventDefault();
+
       const data = {};
       data.id = taskId;
-      data.title = document.getElementById("task-title").value;
-      data.description = document.getElementById("task-description").value;
+      data.title = title;
+      data.description = description;
 
       let axiosConfig = {
           headers: {
@@ -35,26 +40,15 @@ export default function EditTask() {
           }
       };
 
-      axios.put('http://localhost:8000/api/update-items', data, {axiosConfig})
+      axios.put('http://localhost:8006/api/update-items/'+taskId, data, {axiosConfig})
           .then(res => {
               console.log(res.data);
-              window.location = "/"
+              window.location = "/";
           })
           .catch(err => {
               console.log('error in request', err);
           });
     };
-
-    // const handleInputChange = (e) => {
-    //   e.preventDefault();
-    //   useEffect(function(){
-    //     const formData = {};
-    //     formData.id = taskId;
-    //     formData.title = document.getElementById("task-title").value;
-    //     formData.description = document.getElementById("task-description").value;
-    //     setTask(formData);
-    //   }, []);
-    // };
       
     return (
         <div className="container">
@@ -72,9 +66,9 @@ export default function EditTask() {
             <div className="col-sm-4 mx-auto mt-5">
                 <form>
                     <div className="row form-group">
-                        <input name="title" id="task-title" value={task?.title} className="form-control mb-4" placeholder="Enter Task Name..." />
+                        <input type="text" name="title" id="task-title" onChange={(e) => {setTitle(e.target.value)}} defaultValue={task?.title} className="form-control mb-4" placeholder="Enter Task Name..." />
     
-                        <textarea name="description" id="task-description" value={task?.description} className="form-control mb-4" placeholder="Task Details..."></textarea>
+                        <textarea name="description" id="task-description" onChange={(e) => {setDescription(e.target.value)}}  defaultValue={task?.description} className="form-control mb-4" placeholder="Task Details..."></textarea>
                         <button onClick={updateItem} className='btn btn-success'>Update</button>
                     </div>
                 </form>
