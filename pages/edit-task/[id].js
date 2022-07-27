@@ -43,7 +43,18 @@ export default function EditTask() {
           .catch(err => {
               console.log('error in request', err);
           });
-  };
+    };
+
+    // const handleInputChange = (e) => {
+    //   e.preventDefault();
+    //   useEffect(function(){
+    //     const formData = {};
+    //     formData.id = taskId;
+    //     formData.title = document.getElementById("task-title").value;
+    //     formData.description = document.getElementById("task-description").value;
+    //     setTask(formData);
+    //   }, []);
+    // };
       
     return (
         <div className="container">
@@ -61,7 +72,7 @@ export default function EditTask() {
             <div className="col-sm-4 mx-auto mt-5">
                 <form>
                     <div className="row form-group">
-                        <input  name="title" id="task-title" value={task?.title} className="form-control mb-4" placeholder="Enter Task Name..." />
+                        <input name="title" id="task-title" value={task?.title} className="form-control mb-4" placeholder="Enter Task Name..." />
     
                         <textarea name="description" id="task-description" value={task?.description} className="form-control mb-4" placeholder="Task Details..."></textarea>
                         <button onClick={updateItem} className='btn btn-success'>Update</button>
