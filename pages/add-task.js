@@ -6,7 +6,7 @@ export default function AddTask() {
         e.preventDefault();
         const data = {};
         data.title = document.getElementById("task-title").value;
-        // data.to_be_completed = new Date();
+        data.description = document.getElementById("task-description").value;
 
         // console.log(data);
 
@@ -35,6 +35,7 @@ export default function AddTask() {
         axios.post('http://localhost:8000/api/save-items', data, {axiosConfig})
             .then(res => {
                 console.log(res.data);
+                window.location = "/"
             })
             .catch(err => {
                 console.log('error in request', err);
@@ -57,8 +58,9 @@ export default function AddTask() {
             <div className="col-sm-4 mx-auto mt-5">
                 <form>
                     <div className="row form-group">
-                        <input name="title" id="task-title" className="form-control mb-4" placeholder="Enter Task Name.." />
+                        <input name="title" id="task-title" className="form-control mb-4" placeholder="Enter Task Name..." />
     
+                        <textarea name="description" id="task-description" className="form-control mb-4" placeholder="Task Details..."></textarea>
                         <button onClick={saveItem} className='btn btn-success'>Save</button>
                     </div>
                 </form>
