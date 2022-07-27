@@ -1,15 +1,17 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+const axios = require('axios');
 
 export default function EditTask() {
     const [task, setTask] = useState([]);
+    
     const router = useRouter();
     const taskId = router.query.id;
 
-    const axios = require('axios');
-
-    axios.get('http://localhost:8000/api/get-item/'+taskId)
+    useEffect(function(){
+      axios.get('http://localhost:8000/api/get-item/'+taskId)
         .then(res => {
             // console.log(res.data.data);
             setTask(JSON.parse(res.data.data));
@@ -17,6 +19,31 @@ export default function EditTask() {
         .catch(err => {
             console.log('error in request', err);
         });
+    }, []);
+
+    const updateItem = (e) => {
+      e.preventDefault();
+      const data = {};
+      data.id = taskId;
+      data.title = document.getElementById("task-title").value;
+      data.description = document.getElementById("task-description").value;
+
+      let axiosConfig = {
+          headers: {
+              'Content-Type': 'application/json;charset=UTF-8',
+              "Access-Control-Allow-Origin": "*"
+          }
+      };
+
+      axios.put('http://localhost:8000/api/update-items', data, {axiosConfig})
+          .then(res => {
+              console.log(res.data);
+              window.location = "/"
+          })
+          .catch(err => {
+              console.log('error in request', err);
+          });
+  };
       
     return (
         <div className="container">
@@ -34,10 +61,10 @@ export default function EditTask() {
             <div className="col-sm-4 mx-auto mt-5">
                 <form>
                     <div className="row form-group">
-                        <input name="title" id="task-title" value={task.title} className="form-control mb-4" placeholder="Enter Task Name..." />
+                        <input  name="title" id="task-title" value={task?.title} className="form-control mb-4" placeholder="Enter Task Name..." />
     
-                        <textarea name="description" id="task-description" className="form-control mb-4" placeholder="Task Details..."></textarea>
-                        <button className='btn btn-success'>Save</button>
+                        <textarea name="description" id="task-description" value={task?.description} className="form-control mb-4" placeholder="Task Details..."></textarea>
+                        <button onClick={updateItem} className='btn btn-success'>Update</button>
                     </div>
                 </form>
             </div>        

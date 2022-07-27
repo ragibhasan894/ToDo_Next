@@ -1,12 +1,13 @@
 import Link from 'next/link'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+const axios = require('axios');
 
 export default function TodoList() {
   const [tasks, setTasks] = useState([]);
 
-  const axios = require('axios');
-
-  axios.get('http://localhost:8000/api/get-items')
+  useEffect(function(){
+    axios.get('http://localhost:8000/api/get-items')
     .then(res => {
         // console.log(res.data.data);
         setTasks(JSON.parse(res.data.data));
@@ -15,6 +16,19 @@ export default function TodoList() {
     .catch(err => {
         console.log('error in request', err);
     });
+  }, []);
+
+  function deleteTask(taskId) {
+    alert('Delete task?');
+    axios.post('http://localhost:8000/api/delete-item/'+taskId)
+    .then(res => {
+        window.location = "/";
+    })
+    .catch(err => {
+        console.log('error in request', err);
+    });
+  }
+  
   return (
     <div className="container-fluid">
         <div className="todo-list-heading row mt-3">
@@ -39,18 +53,14 @@ export default function TodoList() {
               </tr>
             </thead>
             <tbody>
-            {tasks.map((task) => {
+            {tasks.map((task,taskId) => {
                 return (
-                  <tr>
+                  <tr key={taskId}>
                       <td>{task.id}</td>
                       <td>{task.title}</td>
                       <td>{task.description}</td>
                       <td>{task.created_at}</td>
-                      <td>
-                          <Link href="/delete-task">
-                            <button className="btn btn-danger float-end"> Delete</button>
-                          </Link>
-
+                      <td><button onClick={() => deleteTask(task.id)} className="btn btn-danger float-end"> Delete</button>
                           <Link href={`/edit-task/${encodeURIComponent(task.id)}`}>
                             <button className="btn btn-info float-end"> Edit </button>
                           </Link>
