@@ -7,7 +7,7 @@ export default function TodoList() {
   const [tasks, setTasks] = useState([]);
 
   useEffect(function(){
-    axios.get('http://localhost:8006/api/get-items')
+    axios.get('http://localhost:8000/api/get-items')
     .then(res => {
         // console.log(res.data.data);
         setTasks(JSON.parse(res.data.data));

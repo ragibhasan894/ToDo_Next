@@ -11,7 +11,7 @@ export default function EditTask() {
     const taskId = router.query.id;
 
     useEffect(function(){
-      axios.get('http://localhost:8006/api/get-item/'+taskId)
+      axios.get('http://localhost:8000/api/get-item/'+taskId)
         .then(res => {
             // console.log(res.data.data);
             setTask(JSON.parse(res.data.data));
@@ -40,7 +40,7 @@ export default function EditTask() {
           }
       };
 
-      axios.put('http://localhost:8006/api/update-items/'+taskId, data, {axiosConfig})
+      axios.put('http://localhost:8000/api/update-items/'+taskId, data, {axiosConfig})
           .then(res => {
               console.log(res.data);
               window.location = "/";
